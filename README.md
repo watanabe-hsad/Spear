@@ -633,9 +633,9 @@ wails build -clean
 <img width="790" height="463" alt="图片" src="https://github.com/user-attachments/assets/8639eb28-68bc-48ba-a65e-5fd30ca3e9af" />
 
 
-[![Star History Chart](https://api.star-history.com/svg?repos=spe4r/spear-x&type=Date)](https://star-history.com/#spe4r/spear-x&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=sspsec/Spear&type=Date)](https://star-history.com/#sspsec/Spear&Date)
 
-[🐛 报告问题](https://github.com/sspsec/Spear/issues) • [💡 功能建议](https://github.com/sspsec/Spear/issues) • [📖 Wiki 文档](https://github.com/sspsec/Spear/wiki)
+[🐛 报告问题](https://github.com/sspsec/Spear/issues) • [💡 功能建议](https://github.com/sspsec/Spear/issues) 
 
 **Created with ❤️ by Spe4r**
 
