@@ -1,6 +1,5 @@
 # SpearX - 现代化跨平台工具管理器
 
-<div align="center">
 
 <img src="https://img.shields.io/badge/SpearX-Tool%20Manager-6366f1?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" alt="SpearX Logo" />
 
@@ -48,7 +47,7 @@
 
 感谢原作者 **sspsec** 创建了这个优秀的工具管理器项目，为开发者和安全研究人员提供了强大的工具管理解决方案。本项目在原有功能基础上专注于 UI/UX 的改进和优化。
 
-<div align="center">
-⭐ 如果这个项目对你有帮助，请给个 Star ⭐
-</div>
+
+
+**⭐ 如果这个项目对你有帮助，请给个 Star ⭐**
 

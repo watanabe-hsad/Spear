@@ -1684,7 +1684,7 @@ func (a *App) SelectFile() (string, error) {
 
 // OpenGitHubPage 在默认浏览器中打开GitHub页面 (macOS专用)
 func (a *App) OpenGitHubPage() error {
-	githubURL := "https://github.com/sspsec/Spear"
+	githubURL := "https://github.com/watanabe-hsad/Spear"
 
 	// 使用macOS的open命令打开默认浏览器
 	cmd := exec.Command("open", githubURL)
