@@ -1,0 +1,26 @@
+{
+  "name": "SpearX",
+  "outputfilename": "SpearX",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "hsad",
+    "email": ""
+  },
+  "info": {
+    "companyName": "hsad Development",
+    "productName": "SpearX",
+    "productVersion": "2.0.0",
+    "copyright": "© 2025 hsad",
+    "comments": "Modern cross-platform tool manager by hsad"
+  },
+  "debounceMS": 100,
+  "devServer": "localhost:34115",
+  "webview": {
+    "allowFileAccess": true
+  },
+  "WindowIsTranslucent": true,
+  "WebviewIsTransparent": true
+}

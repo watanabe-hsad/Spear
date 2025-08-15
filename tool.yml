@@ -1,0 +1,742 @@
+# Java 8
+# 路径：resources/java8/bin/java
+# 这个路径指向Java 8的可执行文件，适用于需要Java 8环境的应用。
+# Java 11
+# 路径：resources/java11/bin/java
+# 这个路径指向Java 11的可执行文件，适用于需要Java 11环境的应用。
+# Java 17
+# 路径：resources/java17/bin/java
+# 这个路径指向Java 17的可执行文件，适用于需要Java 17环境的应用。
+# 打开方式
+# 命令：open
+# 该命令用于打开或执行文件，具体依赖于操作系统的配置。
+
+javapath:
+    Java8: resources/java8/bin/java
+    Java11: resources/java11/bin/java
+    Java17: resources/java17/bin/java
+    Open: ""
+Categories:
+    - CategoryName: 信息收集
+      Tools:
+        - ToolName: Fine
+          PATH: resources/info/fine/
+          FileName: Fine.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 企业资产信息收集工具，支持子域名发现、端口扫描、服务识别等功能，提供图形化界面。
+        - ToolName: XrayGUI
+          PATH: resources/info/xray
+          FileName: super-xray-1.7.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Xray漏洞扫描器的图形界面，提供便捷的Web漏洞检测功能，内置多种POC。
+        - ToolName: WebFinder
+          PATH: resources/info/webfinder
+          FileName: webfinder-next.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 网站指纹识别工具，可检测网站使用的CMS、框架、服务器类型等信息，辅助渗透前期信息收集。
+        - ToolName: ScanDir
+          PATH: resources/info/dirscan_3.0
+          FileName: scandir-3.0.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 目录扫描工具，用于发现网站隐藏目录和敏感文件，支持多线程高速扫描，内置多种字典。
+        - ToolName: heapdump
+          PATH: resources/info/heapdump
+          FileName: JDumpSpider-1.1-SNAPSHOT-full.jar
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Java堆转储文件分析工具，用于检测Java应用中可能存在的敏感信息泄露。
+        - ToolName: MiTan
+          PATH: resources/info/mitan
+          FileName: mitan-jar-with-dependencies.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: ""
+          Description: 企业资产收集与管理工具，可收集子域名、IP、端口等信息，整合多种收集手段。
+        - ToolName: fofaviewer
+          PATH: resources/info/FofaViewer
+          FileName: fofaviewer.jar
+          VALUE: Java8
+          COMMAND: ""
+          Optional: ""
+          Description: FOFA搜索引擎的图形化客户端，支持批量查询、结果导出，便于网络空间资产搜索。
+        - ToolName: Gorailgun
+          PATH: resources/info/gorailgun-normal-1.5.5
+          FileName: gorailgun-normal-1.5.5.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 安全评估与渗透测试工具，集成多种信息收集模块，提供图形化操作界面。
+        - ToolName: Ehole
+          PATH: resources/info/EHole
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 红队重点攻击系统指纹探测工具，专注于识别易受攻击的系统和服务。
+        - ToolName: dirmap
+          PATH: resources/info/dirmap
+          FileName: dirmap.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 高级Web目录文件扫描工具，支持递归扫描、自定义字典、多线程等功能。
+        - ToolName: dirsearch
+          PATH: resources/info/dirsearch-0.4.3
+          FileName: dirsearch.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 简单高效的Web路径扫描器，内置多种字典，支持多种HTTP方法和状态码过滤。
+        - ToolName: ENscan
+          PATH: resources/info/enscan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 企业信息收集工具，可收集企业相关的域名、子域名、邮箱等敏感信息。
+        - ToolName: swagger-hack2.0
+          PATH: resources/info/swagger-hack
+          FileName: swagger-hack2.0.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Swagger API文档信息收集与安全测试工具，可自动发现API接口并进行安全检测。
+        - ToolName: PackerFuzzer
+          PATH: resources/info/webpackscan
+          FileName: PackerFuzzer.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Webpack打包文件分析工具，可从前端资源中提取敏感信息和API接口。
+        - ToolName: TideFinger
+          PATH: resources/info/TideFinger
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 指纹识别工具，支持Web应用、操作系统、服务等多种指纹识别，准确率高。
+        - ToolName: LinkFinder
+          PATH: resources/info/LinkFinder
+          FileName: linkfinder.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 从JavaScript文件中提取URL和API端点的工具，有助于发现隐藏的攻击面。
+        - ToolName: GitHack
+          PATH: resources/info/GitHack-py3
+          FileName: GitHack.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Git源码泄露利用工具，可从.git目录恢复完整的源代码。
+    - CategoryName: 渗透利器
+      Tools:
+        - ToolName: BurpSuite
+          PATH: resources/pentest/BurpSuite
+          FileName: BurpSuite.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 功能强大的Web安全测试工具，支持代理拦截、漏洞扫描、爬虫等功能，是渗透测试人员的必备工具。
+        - ToolName: Yakit
+          PATH: resources/pentest/Yakit/
+          FileName: Yakit.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: Cyber Security ALL-IN-ONE Platform
+        - ToolName: fscan
+          PATH: resources/Intranet/fscan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 内网综合扫描工具，支持主机发现、端口扫描、服务爆破等功能，速度快效率高。
+        - ToolName: CobalStrike4.9
+          PATH: resources/pentest/CobaltSrike_4.9.1_Cracked/Client
+          FileName: cobaltstrike-client.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: -XX:ParallelGCThreads=4 -XX:+AggressiveHeap -XX:+UseParallelGC -javaagent:uHook.jar -jar cobaltstrike-client.jar $*
+          Description: 高级威胁模拟与渗透测试平台，提供后渗透阶段的多种功能，包括横向移动、权限维持等。
+        - ToolName: miscan
+          PATH: resources/pentest/miscan
+          FileName: miscan.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: POC生成管理，综合漏洞扫描器，集成多种扫描引擎，支持Web应用、网络服务等多种目标扫描。
+        - ToolName: Ladon
+          PATH: resources/Intranet/ladon
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 大型内网渗透扫描器，集成40+种协议爆破、135个模块扫描，功能全面。
+        - ToolName: kscan
+          PATH: resources/Intranet/kscan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 轻量级内网扫描器，专注于端口扫描和服务识别，性能优异。
+        - ToolName: arp-scan
+          PATH: resources/Intranet/arp-scan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: ARP协议扫描工具，用于发现局域网内的活跃主机。
+        - ToolName: mimikatz
+          PATH: resources/Intranet/mimikatz
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Windows凭据提取工具，可获取明文密码、哈希值、Kerberos票据等。
+        - ToolName: sharpscan
+          PATH: resources/Intranet/sharpscan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 基于C#的内网扫描工具，支持多种扫描模式和协议。
+        - ToolName: goexec
+          PATH: resources/Intranet/goexec/goexec_v0.1.2_darwin_arm64
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 跨平台命令执行工具，支持多种协议的远程命令执行。
+        - ToolName: gogogo
+          PATH: resources/Intranet/gogogo
+          FileName: gogogo-jar-with-dependencies.jar
+          VALUE: Java8
+          COMMAND: ""
+          Optional: ""
+          Description: 内网渗透辅助工具，集成多种内网渗透常用功能。
+        - ToolName: Wavely
+          PATH: resources/pentest/Wavely-2.0.1
+          FileName: Wavely.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: Web应用安全测试平台，提供漏洞扫描、渗透测试等功能。
+        - ToolName: Sqlmap-gui
+          PATH: resources/pentest/sqlmap-gui-main
+          FileName: gui_mac.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: SQLMap的图形化界面版本，简化SQL注入检测和利用操作。
+        - ToolName: impacket
+          PATH: resources/Intranet/impacket/examples
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Python网络协议库，包含多种Windows网络协议的实现和利用工具。
+        - ToolName: impacket-windows
+          PATH: resources/Intranet/impacket-windows
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Impacket工具的Windows版本，适用于Windows环境下的内网渗透。
+        - ToolName: 内网提权工具合集
+          PATH: resources/Intranet/priv
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 集成多种Windows和Linux提权工具的合集包。
+        - ToolName: PSTools
+          PATH: resources/Intranet/PSTools
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Microsoft官方的Windows系统管理工具集，可用于远程管理和渗透测试。
+        - ToolName: nbtscan
+          PATH: resources/Intranet/nbtscan
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: NetBIOS信息扫描器，用于收集Windows网络中的主机信息。
+        - ToolName: 承影
+          PATH: resources/other/ChengYing
+          FileName: ChYing.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 将旦昧爽之交，日夕昏明之际，北面而察之，淡淡焉若有物存，莫识其状。其所触也，窃窃然有声，经物而物不疾也。
+    - CategoryName: Webshell管理工具
+      Tools:
+        - ToolName: 哥斯拉 v4.0.1
+          PATH: resources/webshell/Godzilla
+          FileName: godzilla.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: -Xdock:icon=godzilla.icns -Dfile.encoding=UTF-8
+          Description: 基于Java的跨平台Webshell管理工具，支持多种连接方式和加密传输，特点是隐蔽性强。
+        - ToolName: 哥斯拉_ekp
+          PATH: resources/webshell/Godzilla_ekp
+          FileName: Godzilla_ekp.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: 哥斯拉的EKP定制版本
+        - ToolName: 哥斯拉特战版
+          PATH: resources/webshell/Godzilla_tz
+          FileName: 哥斯拉特战版.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: 哥斯拉的特战版本，增强了免杀能力和隐蔽性功能。
+        - ToolName: 中国蚁剑 v2.1.15
+          PATH: resources/webshell/AntSword
+          FileName: AntSword.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 开源的跨平台Webshell管理工具，支持多种脚本语言和数据库操作，界面友好。
+        - ToolName: 冰蝎 v3.0.11
+          PATH: resources/webshell/Behinder_v3.0.11
+          FileName: Behinder.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: -Xdock:icon=Behinder.icns -Dfile.encoding=UTF-8
+          Description: 冰蝎的早期版本，保留用于兼容旧版Webshell。
+        - ToolName: 冰蝎 v4.1
+          PATH: resources/webshell/Behinder_v4.1.t00ls
+          FileName: Behinder.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: -Xdock:icon=Behinder.icns -Dfile.encoding=UTF-8
+          Description: 动态二进制加密的Webshell管理工具，通信过程完全加密，难以被检测。
+        - ToolName: 冰蝎魔改 v3.3.2
+          PATH: resources/webshell/Behinder-Mode
+          FileName: Behinder-Mode.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: -Xdock:icon=Behinder.icns -Dfile.encoding=UTF-8
+          Description: 基于冰蝎的修改版，增加了更多功能和绕过技术。
+        - ToolName: 天蝎 v1.0
+          PATH: resources/webshell/TianXie
+          FileName: Tianxie.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: ""
+          Description: 冰蝎的衍生工具，专注于提供更强的隐蔽性和更多的功能扩展。
+        - ToolName: Webshell生成 v1.2.4
+          PATH: resources/webshell/Webshell_Generate
+          FileName: Webshell_Generate-1.2.4.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 自动化生成各种类型Webshell的工具，支持多种语言和编码方式。
+        - ToolName: XG_NTAI
+          PATH: resources/webshell/XG_NTAI_V2
+          FileName: XG_NTAI.jar
+          VALUE: Java8
+          COMMAND: ""
+          Optional: ""
+          Description: 基于Java的Webshell生成，支持多种脚本语言和加密方式。
+        - ToolName: jMG-1.0.6-GUI
+          PATH: resources/webshell/jMG
+          FileName: jMG-1.0.6-GUI.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: Java内存马生成和管理工具，支持多种中间件的内存马注入。
+        - ToolName: p0wny-shell
+          PATH: resources/webshell/p0wny-shell
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 轻量级PHP Webshell，界面美观，功能实用，单文件部署。
+        - ToolName: php-reverse-shell
+          PATH: resources/webshell/php-reverse-shell
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: PHP反向Shell脚本集合，用于建立反向连接。
+    - CategoryName: 框架利用工具
+      Tools:
+        - ToolName: ShiroAttack
+          PATH: resources/framework/shiro/shiro_attack-4.7
+          FileName: shiro_attack-4.7.0-SNAPSHOT-all.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Apache Shiro反序列化漏洞利用工具，支持多种Payload和回显方式。
+        - ToolName: PykeShiro
+          PATH: resources/framework/shiro/shiro_attack2
+          FileName: Pyke-Shiro_0.3.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 另一款Shiro反序列化漏洞检测与利用工具，界面友好，操作简单。
+        - ToolName: Shiro550NoCC
+          PATH: resources/framework/shiro
+          FileName: Shiro-550-with-NoCC.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 针对Shiro-550漏洞的专用工具，不依赖Commons-Collections。
+        - ToolName: NacosExp
+          PATH: resources/framework/Nacos
+          FileName: NacosExploitGUI_v4.0.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Nacos权限绕过漏洞利用工具，提供图形化界面。
+        - ToolName: JenKinsExp
+          PATH: resources/framework/JenKins
+          FileName: JenkinsExploit-GUI-1.3-SNAPSHOT.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Jenkins多种漏洞利用工具，包括未授权访问、RCE等。
+        - ToolName: JbossExp
+          PATH: resources/framework/jboss
+          FileName: JavaJboss.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: JBoss应用服务器漏洞利用工具，集成多个已知CVE。
+        - ToolName: RuoyiExp
+          PATH: resources/framework/Ruoyi
+          FileName: ruoyiVuln.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 若依框架漏洞检测与利用工具。
+        - ToolName: ThinkphpGUI
+          PATH: resources/framework/thinkphp
+          FileName: ThinkphpGUI.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: ThinkPHP框架漏洞利用工具，图形化界面。
+        - ToolName: SpringBootExploit
+          PATH: resources/framework/Spring/SpringBootExploit-1.3-SNAPSHOT-all
+          FileName: SpringBootExploit-1.3-SNAPSHOT-all.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: SpringBoot框架相关漏洞检测与利用工具。
+        - ToolName: Struts2Exp
+          PATH: resources/framework/struts2
+          FileName: struts2_19.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Struts2漏洞利用工具，支持多个版本的漏洞检测。
+        - ToolName: WeblogicTool
+          PATH: resources/framework/weblogic
+          FileName: WeblogicTool_1.3.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Weblogic服务器漏洞利用工具，包含多个已知CVE。
+        - ToolName: AttackTomcat
+          PATH: resources/framework/tomcat
+          FileName: AttackTomcat.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Tomcat服务器漏洞利用工具，集成多种攻击方式。
+        - ToolName: DruidExp
+          PATH: resources/framework/druid
+          FileName: druid_sessions-1.0-SNAPSHOT.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Druid数据源监控面板接管工具。
+        - ToolName: Thelostworld OA
+          PATH: resources/comprehensive/Thelostworld_OA
+          FileName: Thelostworld_OA.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 集成多款OA系统漏洞利用的综合工具。
+        - ToolName: LiqunKit
+          PATH: resources/comprehensive/LiqunKit
+          FileName: LiqunKit_1.6.2.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 综合渗透测试工具包，集成多种常见漏洞利用模块。
+        - ToolName: 2023 0day
+          PATH: resources/comprehensive/day2023
+          FileName: day2023.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 收集2023年公开的0day漏洞利用工具集合。
+        - ToolName: HvvExp
+          PATH: resources/comprehensive/HVVExploitApply
+          FileName: HVVExploitApply.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 红蓝对抗中常用的漏洞利用工具集合。
+        - ToolName: APTools
+          PATH: resources/comprehensive/apt
+          FileName: IWannaGetAll.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: APT攻击模拟与检测工具集。
+        - ToolName: 0x7eTeamTools
+          PATH: resources/comprehensive/0x7eTeamTools
+          FileName: 0x7e.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 0x7e团队开发的综合渗透测试工具。
+        - ToolName: MyExploit
+          PATH: resources/comprehensive/MyExploit
+          FileName: MYExploit.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 个人定制的漏洞利用集合工具。
+        - ToolName: poc2jar综合利用工具
+          PATH: resources/comprehensive/poc2jar-MACOS
+          FileName: poc2jar.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 将多种POC整合为jar包的综合利用工具。
+        - ToolName: hyacinth综合利用工具
+          PATH: resources/comprehensive
+          FileName: hyacinth.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 集成多种漏洞利用的综合渗透测试平台。
+        - ToolName: DockerAPITool
+          PATH: resources/framework/docker
+          FileName: DockerAPITool_v0.1.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: Docker API未授权访问漏洞利用工具，可实现容器逃逸和权限提升。
+        - ToolName: JYso-1.3.5.2
+          PATH: resources/framework/jndi
+          FileName: JYso-1.3.5.2.jar
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: JNDI注入利用工具，支持多种Payload生成和LDAP服务搭建。
+        - ToolName: VcenterKit
+          PATH: resources/framework/vcenterKit
+          FileName: VcenterKit_PyQt6.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: VMware vCenter漏洞利用工具包，集成多个vCenter相关CVE。
+        - ToolName: XXL-JOB漏洞综合利用工具_1.5
+          PATH: resources/framework/xxljob
+          FileName: XXL-JOB漏洞综合利用工具_1.5.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: XXL-JOB分布式任务调度平台的漏洞检测与利用工具。
+        - ToolName: ysoserial
+          PATH: resources/framework/ysoserial
+          FileName: ysoserial-all.jar
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 生成利用Java反序列化漏洞的payload
+        - ToolName: Java-chains
+          PATH: resources/framework/java-chains
+          FileName: java-chains-1.4.1.jar
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: Java Chains 是一个 Java Payload 综合生成与利用平台，提供了生成各种 Java Payload 功能，能够用于测试 JNDI 注入、MySQL JDBC 反序列化、JRMP 反序列化等场景。
+        - ToolName: TomcatScanPro
+          PATH: resources/framework/TomcatScanPro
+          FileName: TomcatScanPro.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 本项目是一个针对 Tomcat 服务的弱口令检测。除了支持 CVE-2017-12615 漏洞的多种利用方式外，还集成了 CNVD-2020-10487 漏洞（Tomcat AJP 协议本地文件包含漏洞）的利用功能，帮助用户高效检测和利用漏洞获取服务器敏感信息。工具同时支持对多个 URL 进行并发检测，并通过动态线程池机制，优化资源利用率，提升检测效率。
+        - ToolName: deswing
+          PATH: resources/framework/deswing
+          FileName: deswing.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: ""
+          Description: 集成ysoserial，一键生成并导出反序列化利用连payload
+    - CategoryName: 数据库利用
+      Tools:
+        - ToolName: OracleShell
+          PATH: resources/databases/OracleShell
+          FileName: oracleShell.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: Oracle数据库漏洞利用工具，支持命令执行和权限提升。
+        - ToolName: PostgerSQL
+          PATH: resources/databases/postgre
+          FileName: postgreUtil-1.0-SNAPSHOT-jar-with-dependencies.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: PostgreSQL数据库漏洞利用与管理工具。
+        - ToolName: MDUT
+          PATH: resources/databases/MDUT
+          FileName: MDUT.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: MySQL数据库利用工具，集成多种MySQL相关漏洞与技术。
+    - CategoryName: 代理
+      Tools:
+        - ToolName: neoreg
+          PATH: resources/proxy/Neo-reGeorg
+          FileName: neoreg.py
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 基于Webshell的SOCKS代理工具，支持多种脚本语言，用于内网穿透。
+        - ToolName: frp
+          PATH: resources/proxy/frp
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 高性能的反向代理应用，支持TCP、UDP、HTTP、HTTPS等协议。
+        - ToolName: Suo5
+          PATH: resources/proxy/suo5
+          FileName: suo5.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 高性能HTTP代理隧道工具，支持多种协议转换和流量伪装。
+        - ToolName: rakshasa
+          PATH: resources/proxy/rakshasa
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 多功能代理工具，支持正向代理、反向代理、端口转发等功能。
+        - ToolName: stowaway
+          PATH: resources/proxy/stowaway
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 多级代理工具，专为渗透测试设计，支持多节点代理链。
+        - ToolName: Proxifier
+          PATH: resources/proxy/Proxifier
+          FileName: Proxifier.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: Proxifier 是一款代理客户端软件，可以让不支持代理服务器工作的程序变的可行。支持各种操作系统和各代理协议，它的运行模式可以指定端口，指定程序的特点。
+        - ToolName: Reqable
+          PATH: resources/proxy/Reqable/
+          FileName: Reqable.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: |-
+            Reqable = Fiddler + Charles + Postman
+            Reqable拥有极简的设计、丰富的功能、高效的性能和桌面手机多端平台。
+    - CategoryName: 其他
+      Tools:
+        - ToolName: 蓝队分析工具箱
+          PATH: resources/blue-team/blue
+          FileName: BlueTeamTools.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 面向防御方的安全分析工具集合，用于应急响应和入侵分析。
+        - ToolName: OSS-Browser
+          PATH: resources/other/oss/oss-browser-darwin-x64
+          FileName: oss-browser.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 阿里云对象存储服务(OSS)的图形化管理工具。
+        - ToolName: API-Tool
+          PATH: resources/other/apitool
+          FileName: API-T00L_v1.2.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: API接口测试与利用工具，支持各种HTTP方法和参数注入。
+        - ToolName: PotatoTool
+          PATH: resources/other/PotatoTool
+          FileName: PotatoTool-1.1-jdk11.jar
+          VALUE: Java11
+          COMMAND: -jar
+          Optional: ""
+          Description: Windows本地权限提升工具，包含多种Potato提权技术。
+        - ToolName: RequestTemplate
+          PATH: resources/other/RequestTemplate
+          FileName: RequestTemplate.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: HTTP请求模板工具，可保存和复用常用请求。
+        - ToolName: DecryptTools加解密工具
+          PATH: resources/other/DecryptTools
+          FileName: DecryptTools.jar
+          VALUE: Java8
+          COMMAND: -jar
+          Optional: ""
+          Description: 多种加密算法的编码解码与加解密工具。
+        - ToolName: 云资产管理工具
+          PATH: resources/other/oss
+          FileName: 云资产管理工具.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: OSS云资产管理工具
+        - ToolName: CTFCrackTools-4.0.7
+          PATH: resources/other/CTFCrackTools
+          FileName: CTFCrackTools-4.0.7.jar
+          VALUE: Java11
+          COMMAND: ""
+          Optional: ""
+          Description: CTF竞赛密码学工具集，集成多种编码解码、加密解密算法。
+        - ToolName: FUZZ字典
+          PATH: resources/other/Dict
+          FileName: ""
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 渗透测试常用字典集合，包含用户名、密码、目录、文件名等各类字典。
+        - ToolName: SiteSucker Pro
+          PATH: resources/other/SiteSucker Pro
+          FileName: SiteSucker Pro.app
+          VALUE: Open
+          COMMAND: ""
+          Optional: ""
+          Description: 网站镜像克隆小工具
+        - ToolName: ToolsFx
+          PATH: resources/blue-team/ToolsFx-1.18.0-jdk8-all-platform
+          FileName: ToolsFx
+          VALUE: openterm
+          COMMAND: ""
+          Optional: ""
+          Description: 跨平台密码学工具箱。包含编解码，编码转换，加解密， 哈希，MAC，签名，大数运算，压缩，二维码功能，CTF等功能。
