@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -136,7 +135,7 @@ func (a *App) GetCategories() (Categories, error) {
 		return categories, nil
 	}
 
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return categories, fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -163,7 +162,7 @@ func (a *App) GetJavaConfig() (*JavaConfig, error) {
 	// 读取配置文件
 	var config Config
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -180,7 +179,7 @@ func (a *App) SaveJavaConfig(javaConfig JavaConfig) error {
 	// 读取现有配置
 	var config Config
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -198,7 +197,7 @@ func (a *App) SaveJavaConfig(javaConfig JavaConfig) error {
 		return fmt.Errorf("序列化配置失败: %v", err)
 	}
 
-	if err := ioutil.WriteFile(configPath, data, 0644); err != nil {
+	if err := os.WriteFile(configPath, data, 0644); err != nil {
 		return fmt.Errorf("写入配置文件失败: %v", err)
 	}
 
@@ -225,7 +224,7 @@ func (a *App) ExecuteCommandWithCustom(path, optional, value, filename, customCo
 	// 读取配置文件
 	var config Config
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -417,7 +416,7 @@ func (a *App) AddTool(tool Tool, categoryName string) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -508,7 +507,7 @@ func (a *App) DeleteTool(toolName, categoryName string) error {
 	var config Config
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -682,7 +681,7 @@ func (a *App) UpdateTool(originalName, categoryName string, tool Tool) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -740,44 +739,9 @@ func (a *App) UpdateTool(originalName, categoryName string, tool Tool) error {
 		}
 	}
 
-	// 创建或打开文件
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return fmt.Errorf("打开配置文件失败: %v", err)
-	}
-	defer file.Close()
-
-	// 写入JavaPaths配置
-	javaPathsData, err := yaml.Marshal(config.JavaPaths)
-	if err != nil {
-		return fmt.Errorf("序列化JavaPaths失败: %v", err)
-	}
-
-	// 写入完整配置
-	content := fmt.Sprintf(`# Java配置
-# 自定义Java路径配置，如果留空将使用系统默认Java
-javapath:
-%s
-# Java 8
-# 路径：resources/java8/bin/java
-# 这个路径指向Java 8的可执行文件，适用于需要Java 8环境的应用。
-# Java 11
-# 路径：resources/java11/bin/java
-# 这个路径指向Java 11的可执行文件，适用于需要Java 11环境的应用。
-# 打开方式
-# 命令：open
-# 该命令用于打开或执行文件，具体依赖于操作系统的配置。
-`, string(javaPathsData))
-
-	if _, err := file.WriteString(content); err != nil {
-		return fmt.Errorf("写入配置失败: %v", err)
-	}
-
-	// 写入Categories数据
-	if newData, err := yaml.Marshal(categories); err != nil {
-		return fmt.Errorf("序列化Categories失败: %v", err)
-	} else if _, err := file.Write(newData); err != nil {
-		return fmt.Errorf("写入Categories数据失败: %v", err)
+	// 使用统一的保存方法
+	if err := a.saveCategoriesToFile(categories, config); err != nil {
+		return err
 	}
 
 	// 发送更新成功事件
@@ -790,7 +754,7 @@ func (a *App) AddCategory(categoryName string) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -819,47 +783,8 @@ func (a *App) AddCategory(categoryName string) error {
 	}
 	categories.Category = append(categories.Category, newCategory)
 
-	// 创建或打开文件
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return fmt.Errorf("打开配置文件失败: %v", err)
-	}
-	defer file.Close()
-
-	// 写入JavaPaths配置
-	javaPathsData, err := yaml.Marshal(config.JavaPaths)
-	if err != nil {
-		return fmt.Errorf("序列化JavaPaths失败: %v", err)
-	}
-
-	// 写入完整配置
-	content := fmt.Sprintf(`# Java配置
-# 自定义Java路径配置，如果留空将使用系统默认Java
-javapath:
-%s
-# Java 8
-# 路径：resources/java8/bin/java
-# 这个路径指向Java 8的可执行文件，适用于需要Java 8环境的应用。
-# Java 11
-# 路径：resources/java11/bin/java
-# 这个路径指向Java 11的可执行文件，适用于需要Java 11环境的应用。
-# 打开方式
-# 命令：open
-# 该命令用于打开或执行文件，具体依赖于操作系统的配置。
-`, string(javaPathsData))
-
-	if _, err := file.WriteString(content); err != nil {
-		return fmt.Errorf("写入配置失败: %v", err)
-	}
-
-	// 写入Categories数据
-	if newData, err := yaml.Marshal(categories); err != nil {
-		return fmt.Errorf("序列化Categories失败: %v", err)
-	} else if _, err := file.Write(newData); err != nil {
-		return fmt.Errorf("写入Categories数据失败: %v", err)
-	}
-
-	return nil
+	// 使用统一的保存方法
+	return a.saveCategoriesToFile(categories, config)
 }
 
 // DeleteCategory 删除分类及其下的所有工具
@@ -867,7 +792,7 @@ func (a *App) DeleteCategory(categoryName string) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -900,46 +825,13 @@ func (a *App) DeleteCategory(categoryName string) error {
 		return fmt.Errorf("分类 '%s' 不存在", categoryName)
 	}
 
-	// 创建或打开文件
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return fmt.Errorf("打开配置文件失败: %v", err)
-	}
-	defer file.Close()
-
-	// 写入JavaPaths配置
-	javaPathsData, err := yaml.Marshal(config.JavaPaths)
-	if err != nil {
-		return fmt.Errorf("序列化JavaPaths失败: %v", err)
+	// 使用统一的保存方法
+	if err := a.saveCategoriesToFile(categories, config); err != nil {
+		return err
 	}
 
-	// 写入完整配置
-	content := fmt.Sprintf(`# Java配置
-# 自定义Java路径配置，如果留空将使用系统默认Java
-javapath:
-%s
-# Java 8
-# 路径：resources/java8/bin/java
-# 这个路径指向Java 8的可执行文件，适用于需要Java 8环境的应用。
-# Java 11
-# 路径：resources/java11/bin/java
-# 这个路径指向Java 11的可执行文件，适用于需要Java 11环境的应用。
-# 打开方式
-# 命令：open
-# 该命令用于打开或执行文件，具体依赖于操作系统的配置。
-`, string(javaPathsData))
-
-	if _, err := file.WriteString(content); err != nil {
-		return fmt.Errorf("写入配置失败: %v", err)
-	}
-
-	// 写入Categories数据
-	if newData, err := yaml.Marshal(categories); err != nil {
-		return fmt.Errorf("序列化Categories失败: %v", err)
-	} else if _, err := file.Write(newData); err != nil {
-		return fmt.Errorf("写入Categories数据失败: %v", err)
-	}
-
+	// 发送更新成功事件
+	wailsRuntime.EventsEmit(a.ctx, "category-deleted", true)
 	return nil
 }
 
@@ -950,7 +842,7 @@ func (a *App) UpdateCategoryTools(categoryName string, tools []Tool) error {
 	var config Config
 
 	// 读取配置文件
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -986,7 +878,7 @@ func (a *App) UpdateToolDescription(toolName, categoryName, description string) 
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -1023,44 +915,9 @@ func (a *App) UpdateToolDescription(toolName, categoryName, description string) 
 		return fmt.Errorf("未找到工具: %s", toolName)
 	}
 
-	// 创建或打开文件
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return fmt.Errorf("打开配置文件失败: %v", err)
-	}
-	defer file.Close()
-
-	// 写入JavaPaths配置
-	javaPathsData, err := yaml.Marshal(config.JavaPaths)
-	if err != nil {
-		return fmt.Errorf("序列化JavaPaths失败: %v", err)
-	}
-
-	// 写入完整配置
-	content := fmt.Sprintf(`# Java配置
-# 自定义Java路径配置，如果留空将使用系统默认Java
-javapath:
-%s
-# Java 8
-# 路径：resources/java8/bin/java
-# 这个路径指向Java 8的可执行文件，适用于需要Java 8环境的应用。
-# Java 11
-# 路径：resources/java11/bin/java
-# 这个路径指向Java 11的可执行文件，适用于需要Java 11环境的应用。
-# 打开方式
-# 命令：open
-# 该命令用于打开或执行文件，具体依赖于操作系统的配置。
-`, string(javaPathsData))
-
-	if _, err := file.WriteString(content); err != nil {
-		return fmt.Errorf("写入配置失败: %v", err)
-	}
-
-	// 写入Categories数据
-	if newData, err := yaml.Marshal(categories); err != nil {
-		return fmt.Errorf("序列化Categories失败: %v", err)
-	} else if _, err := file.Write(newData); err != nil {
-		return fmt.Errorf("写入Categories数据失败: %v", err)
+	// 使用统一的保存方法
+	if err := a.saveCategoriesToFile(categories, config); err != nil {
+		return err
 	}
 
 	// 发送更新成功事件
@@ -1164,7 +1021,7 @@ func (a *App) GetToolNote(toolPath, toolName string) (string, error) {
 		return "", nil
 	}
 
-	data, err := ioutil.ReadFile(noteFile)
+	data, err := os.ReadFile(noteFile)
 	if err != nil {
 		return "", fmt.Errorf("读取笔记失败: %v", err)
 	}
@@ -1190,7 +1047,7 @@ func (a *App) SaveToolNote(toolPath, toolName, content string) error {
 	}
 
 	noteFile := filepath.Join(toolDir, fmt.Sprintf("%s.md", toolName))
-	return ioutil.WriteFile(noteFile, []byte(content), 0644)
+	return os.WriteFile(noteFile, []byte(content), 0644)
 }
 
 // DeleteToolNote 删除工具笔记 (新版本：从工具文件夹中删除)
@@ -1231,7 +1088,7 @@ func (a *App) findAndMigrateOldNote(toolPath, toolName string) string {
 
 		for _, oldId := range possibleIds {
 			oldNoteFile := filepath.Join(notesDir, fmt.Sprintf("%s.md", oldId))
-			if data, err := ioutil.ReadFile(oldNoteFile); err == nil {
+			if data, err := os.ReadFile(oldNoteFile); err == nil {
 				// 找到旧笔记，迁移到新位置
 				content := string(data)
 				if err := a.SaveToolNote(toolPath, toolName, content); err == nil {
@@ -1250,7 +1107,7 @@ func (a *App) findAndMigrateOldNote(toolPath, toolName string) string {
 // findOtherNotesInToolDir 在工具目录中查找其他笔记文件
 func (a *App) findOtherNotesInToolDir(toolDir, currentToolName string) string {
 	// 读取工具目录中的所有文件
-	files, err := ioutil.ReadDir(toolDir)
+	files, err := os.ReadDir(toolDir)
 	if err != nil {
 		return ""
 	}
@@ -1263,7 +1120,7 @@ func (a *App) findOtherNotesInToolDir(toolDir, currentToolName string) string {
 			if file.Name() != expectedFileName {
 				// 找到其他笔记文件，尝试读取内容
 				noteFile := filepath.Join(toolDir, file.Name())
-				if data, err := ioutil.ReadFile(noteFile); err == nil {
+				if data, err := os.ReadFile(noteFile); err == nil {
 					content := string(data)
 
 					// 将找到的笔记迁移到正确的文件名
@@ -1378,7 +1235,7 @@ func (a *App) ScanToolsInPath(scanPath string) ([]ScannedTool, error) {
 	}
 
 	// 遍历resources文件夹下的分类文件夹
-	categoryDirs, err := ioutil.ReadDir(scanPath)
+	categoryDirs, err := os.ReadDir(scanPath)
 	if err != nil {
 		return scannedTools, fmt.Errorf("读取扫描目录失败: %v", err)
 	}
@@ -1398,7 +1255,7 @@ func (a *App) ScanToolsInPath(scanPath string) ([]ScannedTool, error) {
 		categoryInfo := a.getCategoryInfo(categoryDir.Name(), existingCategories)
 
 		// 遍历分类目录下的工具文件夹
-		toolDirs, err := ioutil.ReadDir(categoryPath)
+		toolDirs, err := os.ReadDir(categoryPath)
 		if err != nil {
 			continue // 跳过无法读取的目录
 		}
@@ -1446,7 +1303,7 @@ func (a *App) ScanToolsInCustomPath(scanPath string) ([]ScannedTool, error) {
 
 	// 先尝试分类式扫描
 	categoryScanned := false
-	entries, err := ioutil.ReadDir(scanPath)
+	entries, err := os.ReadDir(scanPath)
 	if err != nil {
 		return scannedTools, fmt.Errorf("读取扫描目录失败: %v", err)
 	}
@@ -1455,7 +1312,7 @@ func (a *App) ScanToolsInCustomPath(scanPath string) ([]ScannedTool, error) {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			categoryPath := filepath.Join(scanPath, entry.Name())
-			subEntries, err := ioutil.ReadDir(categoryPath)
+			subEntries, err := os.ReadDir(categoryPath)
 			if err != nil {
 				continue
 			}
@@ -1522,7 +1379,7 @@ func (a *App) loadExistingCategories() (map[string]CategoryInfo, error) {
 	existingCategories := make(map[string]CategoryInfo)
 
 	// 读取现有配置
-	if data, err := ioutil.ReadFile(configPath); err == nil {
+	if data, err := os.ReadFile(configPath); err == nil {
 		var categories Categories
 		if err := yaml.Unmarshal(data, &categories); err == nil {
 			// 建立目录名到分类信息的映射
@@ -1657,7 +1514,7 @@ func (a *App) scanExecutableFiles(toolDir string) ([]string, error) {
 // analyzeToolDirectory 分析工具目录内容，决定如何添加工具
 func (a *App) analyzeToolDirectory(toolDir string) (toolType string, fileName string, command string) {
 	// 读取工具目录内容
-	files, err := ioutil.ReadDir(toolDir)
+	files, err := os.ReadDir(toolDir)
 	if err != nil {
 		return "openterm", "", ""
 	}
@@ -1856,7 +1713,7 @@ func (a *App) GetNewToolsFromScanned(tools []ScannedTool) ([]ScannedTool, error)
 	var config Config
 
 	// 读取现有配置
-	if data, err := ioutil.ReadFile(configPath); err == nil {
+	if data, err := os.ReadFile(configPath); err == nil {
 		yaml.Unmarshal(data, &categories)
 		yaml.Unmarshal(data, &config)
 	}
@@ -1889,7 +1746,7 @@ func (a *App) AutoAddScannedTools(tools []ScannedTool) error {
 	// 读取现有配置
 	var categories Categories
 	var config Config
-	if data, err := ioutil.ReadFile(configPath); err == nil {
+	if data, err := os.ReadFile(configPath); err == nil {
 		yaml.Unmarshal(data, &categories)
 		yaml.Unmarshal(data, &config)
 	}
@@ -1982,9 +1839,38 @@ func (a *App) saveCategoriesToFile(categories Categories, config Config) error {
 		}
 	}
 
+	// 检查Java配置是否为空，如果为空则尝试保持原有配置
+	javaConfig := config.JavaPaths
+	if javaConfig.Java8 == "" && javaConfig.Java11 == "" && javaConfig.Java17 == "" {
+		// 尝试从备份中读取原有配置
+		backupPath := configPath + ".backup"
+		if _, err := os.Stat(backupPath); err == nil {
+			if backupData, err := os.ReadFile(backupPath); err == nil {
+				var backupConfig Config
+				if err := yaml.Unmarshal(backupData, &backupConfig); err == nil {
+					// 如果备份中有Java配置，使用备份的配置
+					if backupConfig.JavaPaths.Java8 != "" || backupConfig.JavaPaths.Java11 != "" || backupConfig.JavaPaths.Java17 != "" {
+						javaConfig = backupConfig.JavaPaths
+						fmt.Println("从备份中恢复Java配置")
+					}
+				}
+			}
+		}
+
+		// 如果备份也没有，使用默认的Java配置
+		if javaConfig.Java8 == "" && javaConfig.Java11 == "" && javaConfig.Java17 == "" {
+			javaConfig = JavaConfig{
+				Java8:  "resources/java8/bin/java",
+				Java11: "resources/java11/bin/java",
+				Java17: "resources/java17/bin/java",
+			}
+			fmt.Println("使用默认Java配置")
+		}
+	}
+
 	// 构建完整的配置对象
 	fullConfig := Config{
-		JavaPaths:  config.JavaPaths,
+		JavaPaths:  javaConfig,
 		Categories: categories.Category,
 	}
 
@@ -2003,7 +1889,7 @@ func (a *App) saveCategoriesToFile(categories Categories, config Config) error {
 	tempPath := configPath + ".tmp"
 
 	// 写入临时文件
-	if err := ioutil.WriteFile(tempPath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(tempPath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("写入临时配置文件失败: %v", err)
 	}
 
@@ -2037,7 +1923,7 @@ func (a *App) saveCategoriesToFile(categories Categories, config Config) error {
 // validateConfigFile 验证配置文件的完整性
 func (a *App) validateConfigFile(configPath string) error {
 	// 读取文件内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2079,7 +1965,7 @@ func (a *App) UpdateCategoryName(oldName, newName string) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2118,7 +2004,7 @@ func (a *App) UpdateCategoriesOrder(orderedCategories []Category) error {
 
 	// 读取现有配置
 	var config Config
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2144,7 +2030,7 @@ func (a *App) UpdateCategoryIcon(categoryName, icon string) error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取原始YAML内容
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2223,7 +2109,7 @@ func (a *App) BrowseDirectory(pathInput string) ([]FileInfo, error) {
 	}
 
 	// 读取目录内容
-	files, err := ioutil.ReadDir(fullPath)
+	files, err := os.ReadDir(fullPath)
 	if err != nil {
 		return fileInfos, fmt.Errorf("读取目录失败: %v", err)
 	}
@@ -2237,8 +2123,15 @@ func (a *App) BrowseDirectory(pathInput string) ([]FileInfo, error) {
 			continue
 		}
 
+		// 获取文件详细信息
+		info, err := file.Info()
+		if err != nil {
+			// 如果获取文件信息失败，跳过该文件
+			continue
+		}
+
 		fileExt := strings.ToLower(filepath.Ext(fileName))
-		isExecutable := a.isExecutableFile(fileName, file)
+		isExecutable := a.isExecutableFile(fileName, info)
 
 		var filePath string
 		if pathInput == "" || pathInput == "/" {
@@ -2250,8 +2143,8 @@ func (a *App) BrowseDirectory(pathInput string) ([]FileInfo, error) {
 		fileInfo := FileInfo{
 			Name:         fileName,
 			IsDir:        file.IsDir(),
-			Size:         file.Size(),
-			ModTime:      file.ModTime().Format("2006-01-02 15:04:05"),
+			Size:         info.Size(),
+			ModTime:      info.ModTime().Format("2006-01-02 15:04:05"),
 			Path:         filePath,
 			Extension:    fileExt,
 			IsExecutable: isExecutable,
@@ -2320,7 +2213,7 @@ func (a *App) CleanupToolPaths() error {
 	configPath := filepath.Join(a.getResourcePath(), "tool.yml")
 
 	// 读取现有配置
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2473,7 +2366,7 @@ func (a *App) RepairConfigFile() error {
 # 自定义Java路径配置，如果留空将使用系统默认Java
 %s`, string(data))
 
-	if err := ioutil.WriteFile(configPath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(configPath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("写入默认配置失败: %v", err)
 	}
 
@@ -2487,7 +2380,7 @@ func (a *App) CleanupDuplicateTools() error {
 
 	// 读取现有配置
 	var config Config
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2641,7 +2534,7 @@ func (a *App) cleanInvalidToolPathsWithResult() (CleanupResult, error) {
 
 	// 读取现有配置
 	var config Config
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return result, fmt.Errorf("读取配置文件失败: %v", err)
 	}
@@ -2756,7 +2649,7 @@ func (a *App) cleanInvalidToolPathsWithMigration(scannedTools []ScannedTool) (Cl
 
 	// 读取现有配置
 	var config Config
-	data, err := ioutil.ReadFile(configPath)
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return result, fmt.Errorf("读取配置文件失败: %v", err)
 	}

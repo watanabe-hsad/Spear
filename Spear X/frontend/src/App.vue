@@ -11,19 +11,11 @@
           <!-- SpearX 纯净文字 -->
           <div class="app-name">SpearX</div>
           <!-- 乔布斯式优雅签名 -->
-          <div class="brand-signature">Created by Spe4r</div>
+          <div class="brand-signature">Created by hsad</div>
         </div>
       </div>
       
       <div class="category-nav">
-        <div class="nav-section">
-          <div class="nav-item all" @click="selectCategory('all')" :class="{active: selectedCategoryName === 'all'}">
-            <span class="nav-icon">📦</span>
-            <span class="nav-text">全部工具</span>
-            <span class="nav-count">{{ getTotalToolCount() }}</span>
-          </div>
-        </div>
-
         <div class="nav-section">
           <draggable 
             v-model="sortableCategories" 
@@ -33,6 +25,7 @@
             ghost-class="category-ghost"
             chosen-class="category-chosen"
             drag-class="category-drag"
+            :animation="200"
           >
             <template #item="{ element: category }">
               <div 
@@ -41,44 +34,6 @@
                 :class="{active: selectedCategoryName === (category.name || category.Name)}"
               >
                 <span class="category-drag-handle" title="拖动排序">⋮⋮</span>
-            <el-popover
-              :visible="iconPopover.visible && iconPopover.categoryName === (category.name || category.Name)"
-              placement="right"
-              width="280px"
-              trigger="manual"
-              @hide="hideIconPopover"
-              popper-class="dark-icon-popover"
-            >
-              <template #reference>
-                <span 
-                  class="nav-icon clickable-icon" 
-                  @click.stop="showIconPopover(category.name || category.Name)"
-                  :title="'点击更改图标'"
-                >
-                  {{ category.icon || getCategoryIcon(category.name || category.Name) }}
-                </span>
-              </template>
-              <div class="icon-popover-content">
-                <div class="icon-grid-compact">
-                  <div 
-                    v-for="icon in availableIcons" 
-                    :key="icon"
-                    class="icon-item-compact"
-                    :class="{ active: iconPopover.selectedIcon === icon }"
-                    @click="selectIconFromPopover(icon)"
-                    :title="icon"
-                  >
-                    {{ icon }}
-                  </div>
-                </div>
-                <div class="icon-popover-footer">
-                  <div class="popover-buttons">
-                    <el-button @click="hideIconPopover" size="small">取消</el-button>
-                    <el-button type="primary" @click="updateCategoryIconFromPopover" size="small">确定</el-button>
-                  </div>
-                </div>
-              </div>
-            </el-popover>
             <span 
               v-if="editingCategory !== (category.name || category.Name)"
               class="nav-text editable-text" 
@@ -163,46 +118,54 @@
 
       <!-- 工具网格 -->
       <div class="tools-container">
-          <div class="current-category-title" v-if="selectedCategoryName !== 'all'">
+          <div class="current-category-title">
             {{ selectedCategoryName }}
           </div>
           
           <div class="tools-grid">
             <draggable
             v-model="currentTools"
-              :animation="150"
+              :animation="200"
               ghost-class="ghost"
+              chosen-class="tool-chosen"
+              drag-class="tool-drag"
             @end="onDragEnd"
             item-key="name"
             class="tools-grid-inner"
+            handle=".tool-drag-handle"
           >
             <template #item="{ element: tool, index }">
-              <div 
-                  class="tool-card"
-                  @click="executeTool(tool)"
+              <el-tooltip
+                :content="tool.description || tool.note || '暂无描述'"
+                placement="top"
+                :show-after="500"
+                :hide-after="0"
+                :disabled="!tool.description && !tool.note"
               >
-                <div class="tool-header">
-                  <div class="tool-icon">
-                    <span class="type-icon" v-html="getToolIcon(tool)"></span>
+                <div 
+                    class="tool-card"
+                    @click="executeTool(tool)"
+                >
+                  <div class="tool-header">
+                    <span class="tool-drag-handle" title="拖动排序">⋮⋮</span>
+                    <div class="tool-title" :title="tool.name">{{ tool.name }}</div>
+                    <div class="tool-type" v-if="tool.value">{{ tool.value }}</div>
                   </div>
-                  <div class="tool-title" :title="tool.name">{{ tool.name }}</div>
-                </div>
-                
-                <div class="tool-body">
-                  <div class="tool-tags">
-                    <el-tag v-if="tool.value" size="small" :type="getTagType(tool.value)">{{ tool.value }}</el-tag>
-                    <el-tag 
-                      v-for="tag in (tool.tags || [])" 
-                      :key="tag" 
-                      size="small" 
-                      type="primary"
-                      @click="searchByTag(tag)"
-                      class="clickable-tag"
-                    >
-                      {{ tag }}
-                    </el-tag>
+                  
+                  <div class="tool-body">
+                    <div class="tool-tags">
+                      <el-tag 
+                        v-for="tag in (tool.tags || [])" 
+                        :key="tag" 
+                        size="small" 
+                        type="primary"
+                        @click="searchByTag(tag)"
+                        class="clickable-tag"
+                      >
+                        {{ tag }}
+                      </el-tag>
+                    </div>
                   </div>
-                </div>
                 
                 <div class="tool-footer">
                   <div class="action-group">
@@ -252,7 +215,8 @@
                   </div>
                 </div>
               </div>
-              </template>
+              </el-tooltip>
+            </template>
             </draggable>
           </div>
         </div>
@@ -914,6 +878,12 @@ export default {
         categories.value = result;
         filteredCategories.value = result.categories || result.Category || [];
         sortableCategories.value = [...(result.categories || result.Category || [])];
+        
+        // 如果当前选中的是'all'且有分类，自动选择第一个分类
+        if (selectedCategoryName.value === 'all' && sortableCategories.value.length > 0) {
+          selectedCategoryName.value = sortableCategories.value[0].name || sortableCategories.value[0].Name;
+        }
+        
         updateCurrentTools(); // 更新当前显示的工具
       } catch (err) {
         ElMessage.error(`加载工具列表失败: ${err}`);
@@ -1633,26 +1603,13 @@ export default {
     const updateCurrentTools = () => {
       const categoryList = categories.value.categories || categories.value.Category || [];
       
-      if (selectedCategoryName.value === 'all') {
-        // 显示所有工具
-        let allTools = [];
-        categoryList.forEach(category => {
-          const tools = category.tools || category.Tool || [];
-          allTools = allTools.concat(tools.map(tool => ({
-            ...tool,
-            categoryName: category.name || category.Name
-          })));
-        });
-        currentTools.value = allTools;
-      } else {
-        // 显示特定分类的工具
-        const selectedCategory = categoryList.find(cat => (cat.name || cat.Name) === selectedCategoryName.value);
-        const tools = selectedCategory ? (selectedCategory.tools || selectedCategory.Tool || []) : [];
-        currentTools.value = tools.map(tool => ({
-          ...tool,
-          categoryName: selectedCategory ? (selectedCategory.name || selectedCategory.Name) : ''
-        }));
-      }
+      // 显示特定分类的工具
+      const selectedCategory = categoryList.find(cat => (cat.name || cat.Name) === selectedCategoryName.value);
+      const tools = selectedCategory ? (selectedCategory.tools || selectedCategory.Tool || []) : [];
+      currentTools.value = tools.map(tool => ({
+        ...tool,
+        categoryName: selectedCategory ? (selectedCategory.name || selectedCategory.Name) : ''
+      }));
       
       // 应用搜索过滤
       if (searchQuery.value) {
@@ -2075,12 +2032,15 @@ export default {
         await window.go.main.App.DeleteCategory(categoryName);
         ElMessage.success('分类删除成功');
         
-        // 如果当前选中的是被删除的分类，切换到全部工具
+        // 如果当前选中的是被删除的分类，切换到第一个分类
         if (selectedCategoryName.value === categoryName) {
-          selectedCategoryName.value = 'all';
+          await loadCategories();
+          if (sortableCategories.value.length > 0) {
+            selectedCategoryName.value = sortableCategories.value[0].name || sortableCategories.value[0].Name;
+          }
+        } else {
+          await loadCategories();
         }
-        
-        await loadCategories();
         updateCurrentTools();
       } catch (err) {
         if (err !== 'cancel') {
@@ -2273,14 +2233,12 @@ export default {
       try {
         silentUpdate.value = true;
         // 这里需要根据当前选择的分类来更新
-        if (selectedCategoryName.value !== 'all') {
-          const categoryList = categories.value.categories || categories.value.Category || [];
-          const category = categoryList.find(cat => (cat.name || cat.Name) === selectedCategoryName.value);
-          if (category) {
-            const categoryName = category.name || category.Name;
-            await window.go.main.App.UpdateCategoryTools(categoryName, currentTools.value);
-        ElMessage.success('工具顺序已更新');
-          }
+        const categoryList = categories.value.categories || categories.value.Category || [];
+        const category = categoryList.find(cat => (cat.name || cat.Name) === selectedCategoryName.value);
+        if (category) {
+          const categoryName = category.name || category.Name;
+          await window.go.main.App.UpdateCategoryTools(categoryName, currentTools.value);
+          ElMessage.success('工具顺序已更新');
         }
         await loadCategories();
         updateCurrentTools();
@@ -3136,15 +3094,15 @@ body,
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 12px 16px;
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 500;
   gap: 10px;
   border-radius: 8px;
-  margin: 0 4px 2px 4px;
+  margin: 0 4px 3px 4px;
 }
 
 .nav-item:hover {
@@ -3194,21 +3152,6 @@ body,
 
 
 
-.nav-icon {
-  font-size: 18px;
-  width: 20px;
-  text-align: center;
-}
-
-.clickable-icon {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.clickable-icon:hover {
-  transform: scale(1.1);
-}
-
 .nav-text {
   flex: 1;
   font-weight: 500;
@@ -3230,7 +3173,7 @@ body,
   border-radius: 4px;
   color: #ffffff;
   padding: 2px 6px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   outline: none;
 }
@@ -3325,16 +3268,21 @@ body,
 }
 
 .category-ghost {
-  opacity: 0.5;
-  background: rgba(255, 255, 255, 0.1);
+  opacity: 0.6;
+  background: rgba(64, 158, 255, 0.15);
+  border: 1px dashed rgba(64, 158, 255, 0.5);
+  transform: scale(0.98);
 }
 
 .category-chosen {
   background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
 }
 
 .category-drag {
-  transform: rotate(5deg);
+  transform: rotate(2deg) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nav-count {
@@ -3536,7 +3484,7 @@ body,
 /* 工具网格布局 - 动态响应 */
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   width: 100%;
   transition: all 0.3s ease;
@@ -3550,16 +3498,16 @@ body,
 .tool-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 12px;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-height: 120px;
+  gap: 8px;
+  min-height: 100px;
   cursor: pointer;
-  container-type: inline-size; /* 启用容器查询 */
+  container-type: inline-size;
 }
 
 .tool-card:hover {
@@ -3572,29 +3520,9 @@ body,
 /* 工具卡片头部 */
 .tool-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 8px;
-}
-
-.tool-header .tool-icon {
-  width: 28px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.tool-header .type-icon {
-  font-size: 14px;
-}
-
-.website-favicon {
-  width: 16px;
-  height: 16px;
-  border-radius: 2px;
 }
 
 .tool-title {
@@ -3603,10 +3531,43 @@ body,
   font-weight: 600;
   color: #ffffff;
   line-height: 1.2;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: calc(100% - 80px);
+}
+
+.tool-type {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 工具拖拽手柄样式 */
+.tool-drag-handle {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: grab;
+  padding: 2px 4px;
+  font-size: 10px;
+  transition: color 0.2s ease;
+  user-select: none;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+.tool-drag-handle:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tool-drag-handle:active {
+  cursor: grabbing;
 }
 
 .tool-footer {
@@ -4127,21 +4088,21 @@ body,
 /* 响应式设计 - 更细致的断点 */
 @media (max-width: 1400px) {
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 14px;
   }
 }
 
 @media (max-width: 1200px) {
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 12px;
   }
 }
 
 @media (max-width: 1000px) {
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 12px;
   }
   
@@ -4162,7 +4123,7 @@ body,
 
 @media (max-width: 768px) {
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
   }
   
@@ -4183,7 +4144,7 @@ body,
 
 @media (max-width: 600px) {
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
   }
   
@@ -4408,6 +4369,21 @@ body,
   opacity: 0.5;
   background: rgba(64, 158, 255, 0.2) !important;
   border: 2px dashed var(--primary-color) !important;
+  transform: rotate(3deg);
+  box-shadow: 0 8px 20px rgba(64, 158, 255, 0.3) !important;
+}
+
+.tool-chosen {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(64, 158, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(64, 158, 255, 0.5) !important;
+}
+
+.tool-drag {
+  transform: rotate(2deg) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
 }
 
 /* 优化搜索框的焦点样式 */

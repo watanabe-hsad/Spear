@@ -43,7 +43,7 @@ func main() {
 			TitleBar:             mac.TitleBarHiddenInset(),
 			About: &mac.AboutInfo{
 				Title:   "SpearX",
-				Message: "A modern cross-platform tool manager\n\nDeveloped by Spe4r\n© 2025 Spe4r Development\n\nVersion 2.0.0",
+				Message: "A modern cross-platform tool manager\n\nDeveloped by hsa d\n© 2025 hsad Development\n\nVersion 2.0.0",
 				Icon:    icon, // 使用嵌入的图标
 			},
 		},

@@ -6,15 +6,15 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "Spe4r",
+    "name": "hsad",
     "email": ""
   },
   "info": {
-    "companyName": "Spe4r Development",
+    "companyName": "hsad Development",
     "productName": "SpearX",
     "productVersion": "2.0.0",
-    "copyright": "© 2025 Spe4r",
-    "comments": "Modern cross-platform tool manager by Spe4r"
+    "copyright": "© 2025 hsad",
+    "comments": "Modern cross-platform tool manager by hsad"
   },
   "debounceMS": 100,
   "devServer": "localhost:34115",
